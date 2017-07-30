@@ -1,6 +1,6 @@
 #cloud-config
 ---
-hostname: topology2.njk.li
+hostname: topology2.sdwan-demo.com
 ssh_authorized_keys:
   - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUKXJgShJMrBFi6VvKCsCJO9c1wLA3ugL3LAJGsRO9KXdZGmLC74/s0KVw4uaWHoTz91qLPdnplSdLU3KDK7loIdKRBR8E4KJ1MiZKGIj7F9NsniiNetQkKvUazrhRx8nFOAYSPD4znkhrh53nXnsI2WDACt0CGNYX33hV3J/kblWYit/wcIEtJg1ivFmBrljtAMZpS2mBpAK0kySCY2BP+Ph8x+6EuCkH1w2J4Moa0fYkibF3K7O4cmcWAtD53eyr8YN4JKvAwTe+uXVsdFDUNkZvCdOLTDDRd7t7C+qL3nbJMv5jVoED0bBBfn7NfEfyqLOzXHmE4bfuMo7KBlH7 vod@agrajag.0.njk.li"
 rancher:
@@ -13,25 +13,24 @@ rancher:
     - /dev/sda
   modules: [kvm, kvm_intel, vhost-net, tun, autofs4]
   docker:
-    # tls: false
+    # Change to 1.12.x for k8s
     engine: docker-1.13.1
     storage_driver: overlay2
   console: debian
   network:
+    interfaces:
+      eth0:
+        dhcp: false
+        bond: bond0
+      eth1:
+        dhcp: false
+        bond: bond0
+      bond0:
+        dhcp: true
     dns:
       nameservers:
       - 8.8.8.8
       - 8.8.4.4
-
-  # services:
-
-  #   rancher-server:
-  #     image: rancher/server
-  #     restart: unless-stopped
-  #     ports:
-  #       - 8080:8080
-  #     volumes:
-  #       - /opt/config_store/rancher/mysql:/var/lib/mysql
 
 write_files:
   - path: /opt/rancher/bin/start.sh
