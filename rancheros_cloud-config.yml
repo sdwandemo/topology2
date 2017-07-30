@@ -18,18 +18,18 @@ rancher:
     storage_driver: overlay2
   console: debian
   network:
-    interfaces:
-      eth0:
-        # dhcp: false
-        bond: bond0
-      eth1:
-        # dhcp: false
-        bond: bond0
-      bond0:
-        bond_opts:
-          downdelay: "200"
-          updelay: "200"
-        # dhcp: true
+    # interfaces:
+    #   eth0:
+    #     dhcp: false
+    #     bond: bond0
+    #   eth1:
+    #     dhcp: false
+    #     bond: bond0
+    #   bond0:
+    #     bond_opts:
+    #       downdelay: "200"
+    #       updelay: "200"
+    #     dhcp: true
     dns:
       nameservers:
       - 8.8.8.8
