@@ -1,0 +1,99 @@
+#cloud-config
+---
+hostname: topology2.njk.li
+ssh_authorized_keys:
+  - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUKXJgShJMrBFi6VvKCsCJO9c1wLA3ugL3LAJGsRO9KXdZGmLC74/s0KVw4uaWHoTz91qLPdnplSdLU3KDK7loIdKRBR8E4KJ1MiZKGIj7F9NsniiNetQkKvUazrhRx8nFOAYSPD4znkhrh53nXnsI2WDACt0CGNYX33hV3J/kblWYit/wcIEtJg1ivFmBrljtAMZpS2mBpAK0kySCY2BP+Ph8x+6EuCkH1w2J4Moa0fYkibF3K7O4cmcWAtD53eyr8YN4JKvAwTe+uXVsdFDUNkZvCdOLTDDRd7t7C+qL3nbJMv5jVoED0bBBfn7NfEfyqLOzXHmE4bfuMo7KBlH7 vod@agrajag.0.njk.li"
+rancher:
+  state:
+    required: true
+    wait: true
+    fstype: auto
+    dev: LABEL=RANCHER_STATE
+    autoformat:
+    - /dev/sda
+  modules: [kvm, kvm_intel, vhost-net, tun, autofs4]
+  docker:
+    # tls: false
+    engine: docker-1.13.1
+    storage_driver: overlay2
+  console: debian
+  network:
+    dns:
+      nameservers:
+      - 8.8.8.8
+      - 8.8.4.4
+
+  # services:
+
+  #   rancher-server:
+  #     image: rancher/server
+  #     restart: unless-stopped
+  #     ports:
+  #       - 8080:8080
+  #     volumes:
+  #       - /opt/config_store/rancher/mysql:/var/lib/mysql
+
+write_files:
+  - path: /opt/rancher/bin/start.sh
+    permissions: "0755"
+    owner: root
+    content: |
+      #!/usr/bin/env bash
+      # This runs before user-docker
+      _chk_upgrade() {
+        [[ $(apt update | grep 'can be upgraded') ]] && apt -y full-upgrade
+      }
+
+      _install_user_scripts() {
+        local scripts=("user_start.sh" "user_rc.local")
+        for i in ${scripts[@]}; do
+          curl https://raw.githubusercontent.com/sdwandemo/topology2/master/scripts/$i > /opt/rancher/bin/$i
+          chmod 0755 /opt/rancher/bin/$i
+        done
+      }
+
+      _chk_upgrade
+      _install_user_scripts
+      exec /opt/rancher/bin/user_start.sh
+
+  - path: /etc/rc.local
+    permissions: "0755"
+    owner: root
+    content: |
+      #!/usr/bin/env bash
+      # This runs after user-docker
+      wait-for-docker
+      exec /opt/rancher/bin/user_rc.local
+
+  - path: /etc/ssh/sshd_config
+    permissions: "0644"
+    owner: root:root
+    content: |
+      UsePrivilegeSeparation yes
+      ClientAliveInterval 180
+      TCPKeepAlive yes
+      KeyRegenerationInterval 3600
+      ServerKeyBits 1024
+      SyslogFacility AUTHPRIV
+      LogLevel INFO
+      LoginGraceTime 120
+      PermitRootLogin no
+      StrictModes yes
+      IgnoreRhosts yes
+      RhostsRSAAuthentication no
+      HostbasedAuthentication no
+      PermitEmptyPasswords no
+      PasswordAuthentication no
+      ChallengeResponseAuthentication no
+      RSAAuthentication yes
+      PubkeyAuthentication yes
+      AcceptEnv LANG LC_*
+      UseDNS no
+      UsePAM yes
+
+  - path: "/etc/fuse.conf"
+    permissions: "0640"
+    owner: root:fuse
+    content: |
+      user_allow_other
+...

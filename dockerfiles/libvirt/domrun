@@ -1,0 +1,119 @@
+#!/usr/bin/env ruby
+# -*- enh-ruby -*-
+
+%w(clamp nokogiri bytes_converter pathname fileutils tempfile open-uri ip).each(&method(:require))
+module Domrun
+
+  def libvirt_xml
+    @doc = Nokogiri::XML(open(template))
+    @doc.at_css('name').content = name
+    @doc.at_css('title').content = title
+    attach_networks
+    @doc.at_css('disk').at_css('source')['file'] = copy(disk)
+    %w(memory currentMemory).each { |c| @doc.at_css(c).content = mem}
+    @doc.at_css('vcpu').content = cpus
+  end
+
+  def copy(d)
+    backing_file = Pathname.new(d).expand_path
+    raise unless (backing_file.exist? && backing_file.dirname.writable?)
+    qcow2_disk_name = '_' + backing_file.basename.to_s.gsub('.qcow2', '') + '-' + `hostname`.strip + '.qcow2'
+    qcow2_disk = (backing_file.dirname + qcow2_disk_name)
+    `cp #{backing_file.to_s} #{qcow2_disk.to_s}` unless qcow2_disk.exist?
+    # `qemu-img create -f qcow2 #{qcow2_disk.to_s} -o backing_file=#{backing_file.to_s} #{disk_size}` unless qcow2_disk.exist?
+    qcow2_disk.to_s
+  end
+
+  def attach_networks
+    master = @doc.at_css('interface').dup
+    @doc.at_css('interface').remove
+
+    networks.split(/ /).each do |i|
+      n = container_networks.find do |nn|
+        IP.new(nn.keys.first).is_in? IP.new(i)
+      end
+      next unless n
+
+      cp = master.dup
+      nic_name = 'vn4' + n.values.first
+      script_path = '/usr/local/bin/qemu-ifup-' + nic_name
+      cp.at_css('target')['dev'] = nic_name
+      cp.at_css('script')['path'] = script_path
+      Pathname.new(script_path).write(script(n))
+      FileUtils.chmod(0755, script_path)
+      @doc.at_css('devices').add_child(cp)
+    end
+  end
+
+  def script(n)
+    if_name = n.values.first
+    ip_addr = n.keys.first
+    bname = "br-#{if_name}-$1"
+    log = "logger -t qemu-ifup #{bname}"
+    ipam = ["ip a del #{ip_addr} dev #{if_name}",
+            "#{log} ip a del #{ip_addr} dev #{if_name}"]
+
+    if @firstnet == n
+      ipam << "ip a add #{ip_addr} dev #{bname}"
+      ipam << "#{log} ip a add #{ip_addr} dev #{bname}"
+      ipam << "ip r add default via #{@default_route} dev #{bname}"
+      ipam << "#{log} ip r add default via #{ip_addr.split('/').first} dev #{bname}"
+    end
+
+    (['#!/bin/bash',
+     "ip link set $1 up",
+     "#{log} ip link set $1 up",
+     "sleep 3",
+     "brctl addbr #{bname}",
+     "#{log} created bridge" ,
+     "brctl addif #{bname} $1",
+     "#{log} added $1 to bridge" ,
+     "brctl addif #{bname} #{if_name}",
+     "#{log} added #{if_name} to bridge",
+     "ip link set dev #{bname} up",
+     "#{log} $(brctl show #{bname} | awk 'END{print}')"] + ipam).join("\n")
+  end
+
+  def container_networks
+    @n ||= `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }
+    @default_route ||= `ip r`.lines.grep(/default/).first.split(/ /)[2]
+    @firstnet ||= @n.find do |n|
+      IP.new(n.keys.first).is_in?(IP.new(networks.split(/ /).first))
+    end
+    @n
+  end
+
+  def _env
+    self.class.declared_options.select{|o| !o.environment_variable.nil?}.map do |o|
+      o.environment_variable + '=' + eval(o.attribute_name).to_s
+    end
+  end
+
+  class CLI < Clamp::Command
+    include Domrun
+    option ['-n', '--name'], 'NAME', 'instance name', environment_variable: 'VM_NAME', required: true
+    option ['-t', '--title'], 'TITLE', 'instance title', environment_variable: 'VM_TITLE', required: true
+    option ['-m', '--mem'], 'MEM', 'amount of memory, ie 4gb 0.5gb 1024mb', environment_variable: 'VM_MEM', required: true
+    option ['-c', '--cpus'], 'CPUS', 'amount of cpus', environment_variable: 'VM_CPUS', required: true
+    option '--net', 'NETWORKS', 'Sequence of IP2NIC mappings', environment_variable: 'VM_NET', attribute_name: 'networks', required: true
+    option ['-d', '--disk'], 'DISK', 'filesystem path to qcow2 img', environment_variable: 'VM_DISK', default: '/var/lib/libvirt/images/image.qcow2'
+    option ['-s', '--size'], 'DISKSIZE', 'declared disk size for qcow2 img', environment_variable: 'VM_DISK_SIZE', attribute_name: 'disk_size', default: '5G'
+    option ['-x', '--xml'], 'DOMXML', 'filesystem path to domain.xml', environment_variable: 'VM_XML', attribute_name: 'domxml',default: '/etc/default/domrun.xml'
+    parameter '[TEMPLATE]', 'URI to xml template', environment_variable: 'VM_TEMPLATE'
+
+    def execute
+
+      @template = 'https://raw.githubusercontent.com/sdwandemo/topology2/master/resources/domain_template.xml' unless @template
+      libvirt_xml
+      Pathname.new('/etc/default/domrun').write(_env.join("\n"))
+      Pathname.new(domxml).write(@doc.to_xml)
+      exec '/lib/systemd/systemd --system'
+    end
+
+    def mem=(m)
+      @mem = BytesConverter.convert(m).to_i / 1024
+    end
+  end
+end
+
+Domrun::CLI.run

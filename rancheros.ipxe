@@ -1,0 +1,19 @@
+#!ipxe
+# -*- conf-colon -*-
+
+set base-ver v1.0.3
+set base-url https://github.com/rancher/os/releases/download/${base-ver}
+set base-url-config https://raw.githubusercontent.com/sdwandemo/topology2/master/rancheros_cloud-config.yml
+
+set cloud-config rancher.cloud_init.datasources=[url:${base-url-config}]
+set rancher-disk rancher.state.formatzero rancher.state.autoformat=[/dev/sda] rancher.state.dev=LABEL=RANCHER_STATE rancher.state.wait
+set debug-cmdline console=ttyS1,115200n8 rancher.autologin=ttyS1
+set cmdline ${rancher-disk} ${cloud-config}
+# ${debug-cmdline}
+
+set kernel-name vmlinuz
+set initrd-name initrd
+
+kernel ${base-url}/${kernel-name} ${cmdline}
+initrd ${base-url}/${initrd-name}
+boot

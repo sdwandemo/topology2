@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# -*- shell-script -*-
+_pull_images() {
+    images=$(docker images | awk 'NR > 1 {print $1":"$2}')
+    [[ -n "$images" ]] && for i in $images; do docker pull $i; done
+}
+
+_enable_kernel_headers() {
+    # -v /usr/src:/usr/src -v /lib/modules:/lib/modules
+    headers=$(ros service list | grep 'disabled kernel' | cut -d ' ' -f2)
+    [[ -n "$headers" ]] && for i in $headers; do (sudo ros service enable $i && sudo ros service up $i); done
+}
+
+_mk_networks() {
+    [[ ! $(docker network ls | grep -qs management) ]] && docker network create --driver bridge --subnet 10.0.0.0/24 --gateway 10.0.0.1 management
+}
+
+_enable_kernel_headers
+_pull_images
+# _mk_networks
+
+exit 0

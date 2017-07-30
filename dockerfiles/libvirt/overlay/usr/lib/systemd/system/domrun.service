@@ -1,0 +1,15 @@
+[Unit]
+Description=Libvirt domain
+After=libvirtd.service
+Requires=libvirtd.service
+
+[Service]
+type=simple
+EnvironmentFile=-/etc/default/domrun
+EnvironmentFile=-/etc/default/domrun.d/*
+ExecStartPre=/usr/sbin/virsh --connect qemu:///system define $VM_XML
+ExecStart=/usr/sbin/virsh --connect qemu:///system start $VM_NAME
+SyslogIdentifier=libvirtd-domrun
+
+[Install]
+WantedBy=multi-user.target
