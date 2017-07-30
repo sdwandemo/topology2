@@ -65,17 +65,17 @@ services:
     image: voobscout/viptela:teleport
     command: 'teleport start --roles=proxy,auth --config /etc/teleport.yml'
     hostname: teleport
-    domainname: njk.li
+    domainname: sdwan-demo.com
     restart: always
     volumes:
       # - /mnt/config/teleport:/var/lib/teleport
       - ./resources/teleport_site.yml:/etc/teleport.yml
     environment:
-      VIRTUAL_HOST: teleport.njk.li
+      VIRTUAL_HOST: teleport.sdwan-demo.com
       VIRTUAL_PROTO: https
       VIRTUAL_PORT: 3080
-      LETSENCRYPT_HOST: teleport.njk.li
-      LETSENCRYPT_EMAIL: webadmin@njk.li
+      LETSENCRYPT_HOST: teleport.sdwan-demo.com
+      LETSENCRYPT_EMAIL: webadmin@sdwan-demo.com
     networks:
       - management
     expose:
@@ -94,7 +94,7 @@ services:
   mariadb:
     image: mariadb
     hostname: mariadb
-    domainname: njk.li
+    domainname: sdwan-demo.com
     # debugging:
     # SET global general_log_file='/tmp/mysql.log';
     # SET global log_output = 'file';
@@ -116,7 +116,7 @@ services:
   guacd:
     image: guacamole/guacd
     hostname: guacd
-    domainname: njk.li
+    domainname: sdwan-demo.com
     restart: always
     networks:
       - management
@@ -128,7 +128,7 @@ services:
   guac:
     image: guacamole/guacamole
     hostname: guacamole
-    domainname: njk.li
+    domainname: sdwan-demo.com
     restart: always
     command: ["/usr/local/bin/guacamole_webroot_fix.sh"]
     volumes:
@@ -148,9 +148,9 @@ services:
       MYSQL_PASSWORD: some_password
       GUACD_HOSTNAME: guacd
       GUACD_PORT: 4822
-      VIRTUAL_HOST: vnc.njk.li
-      LETSENCRYPT_HOST: vnc.njk.li
-      LETSENCRYPT_EMAIL: webadmin@njk.li
+      VIRTUAL_HOST: vnc.sdwan-demo.com
+      LETSENCRYPT_HOST: vnc.sdwan-demo.com
+      LETSENCRYPT_EMAIL: webadmin@sdwan-demo.com
     networks:
       - management
     depends_on:
@@ -163,7 +163,7 @@ services:
   net-debug:
     image: voobscout/viptela:net-debug
     hostname: net-debug
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -221,7 +221,7 @@ services:
   #   image: voobscout/viptela
   #   command: '-n e-regdc1 -t "e-regdc1 North West quadrant on Diagram" -m 2048m --net "10.10.10.0/24 192.168.7.0/24 172.16.7.0/24 10.0.7.0/24" -c 4'
   #   hostname: e-regdc1
-  #   domainname: njk.li
+  #   domainname: sdwan-demo.com
   #   privileged: true
   #   stdin_open: true
   #   tty: true
@@ -280,7 +280,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: e-reg-dc
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -313,7 +313,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/pfSense_234.qcow2
       VM_DISK_SIZE: 5G
     hostname: firewall
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -342,7 +342,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: core-switch
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -366,7 +366,7 @@ services:
     image: voobscout/viptela:teleport
     command: 'teleport start --roles=node --token=internalxyz --auth-server=teleport:3025'
     hostname: ux-srv-coreswitch
-    domainname: njk.li
+    domainname: sdwan-demo.com
     restart: always
     networks:
       - management
@@ -383,7 +383,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: dc-left
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -412,7 +412,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: dc-right
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -442,7 +442,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: e-inet
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -475,7 +475,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: e-mpls
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -510,7 +510,7 @@ services:
       VM_TEMPLATE: 'https://raw.githubusercontent.com/sdwandemo/topology2/master/resources/domain_template_wanem.xml'
       VM_DISK_SIZE: 5G
     hostname: wanem
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -537,7 +537,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: e-site1
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -558,7 +558,7 @@ services:
     image: voobscout/viptela:teleport
     command: 'teleport start --roles=node --token=internalxyz --auth-server=teleport:3025'
     hostname: ux-srv-site1
-    domainname: njk.li
+    domainname: sdwan-demo.com
     restart: always
     networks:
       - management
@@ -575,7 +575,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: e-left-site2
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -604,7 +604,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: e-right-site2
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -632,7 +632,7 @@ services:
   desktop:
     image: voobscout/viptela:net-debug
     hostname: desktop
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -664,7 +664,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: e-bond1-demo
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -690,7 +690,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: e-bond2-demo
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -716,7 +716,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-smart-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: s-smart1-demo
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -742,7 +742,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-smart-genericx86-64.qcow2
       VM_DISK_SIZE: 4G
     hostname: s-smart2-demo
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -769,7 +769,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-vmanage-genericx86-64.qcow2
       VM_DISK_SIZE: 10G
     hostname: vmanage
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -795,7 +795,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 5G
     hostname: e-cloud
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -823,7 +823,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/viptela-edge-genericx86-64.qcow2
       VM_DISK_SIZE: 5G
     hostname: e-b2b
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -850,7 +850,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/csr1000v-universalk9.03.12.00.S.154-2.S-std.qcow2
       VM_DISK_SIZE: 8G
     hostname: csr1k-b2b
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -870,7 +870,7 @@ services:
     image: voobscout/viptela:teleport
     command: 'teleport start --roles=node --token=internalxyz --auth-server=teleport:3025'
     hostname: ux-srv-b2b
-    domainname: njk.li
+    domainname: sdwan-demo.com
     restart: always
     networks:
       - management
@@ -887,7 +887,7 @@ services:
       VM_DISK: /var/lib/libvirt/images/csr1000v-universalk9.03.12.00.S.154-2.S-std.qcow2
       VM_DISK_SIZE: 8G
     hostname: csr1k-site3
-    domainname: njk.li
+    domainname: sdwan-demo.com
     privileged: true
     stdin_open: true
     tty: true
@@ -907,7 +907,7 @@ services:
     image: voobscout/viptela:teleport
     command: 'teleport start --roles=node --token=internalxyz --auth-server=teleport:3025'
     hostname: ux-srv-site3
-    domainname: njk.li
+    domainname: sdwan-demo.com
     restart: always
     networks:
       - management
