@@ -11,7 +11,7 @@ rancher:
     dev: LABEL=RANCHER_STATE
     autoformat:
     - /dev/sda
-  modules: [kvm, kvm_intel, vhost-net, tun, autofs4]
+  modules: [kvm, kvm_intel, vhost-net, autofs4]
   docker:
     # Change to 1.12.x for k8s
     engine: docker-1.13.1
@@ -20,13 +20,16 @@ rancher:
   network:
     interfaces:
       eth0:
-        dhcp: false
+        # dhcp: false
         bond: bond0
       eth1:
-        dhcp: false
+        # dhcp: false
         bond: bond0
       bond0:
-        dhcp: true
+        bond_opts:
+          downdelay: "200"
+          updelay: "200"
+        # dhcp: true
     dns:
       nameservers:
       - 8.8.8.8
