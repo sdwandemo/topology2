@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 # -*- shell-script -*-
+
+DKR="docker run --rm -ti -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper"
+
 _pull_images() {
     images=$(docker images | awk 'NR > 1 {print $1":"$2}')
     [[ -n "$images" ]] && for i in $images; do docker pull $i; done
@@ -15,8 +18,30 @@ _mk_networks() {
     [[ ! $(docker network ls | grep -qs management) ]] && docker network create --driver bridge --subnet 10.0.0.0/24 --gateway 10.0.0.1 management
 }
 
+_download() {
+    $DKR wget http://demo.njk.li:8081/imgs.7z
+    $DKR 7z x imgs.7z
+    rm -rf /opt/tmp/imgs.7z
+}
+
+_copy_prep() {
+    local cmd="ruby -ropen-uri -e"
+    local url="https://raw.githubusercontent.com/sdwandemo/topology2/master/scripts/copy_prep.rb"
+    $DKR $cmd "eval(open(\"${url}\").read)"
+}
+
+_install_zsh() {
+    chsh -s /bin/zsh rancher
+    runuser -l rancher -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    runuser -l rancher -c "sed -i 's/robbyrussell/sunaku/' ~/.zshrc"
+}
+
 _enable_kernel_headers
 # _pull_images
 # _mk_networks
+[[ ! -d /home/rancher/.oh-my-zsh ]] && _install_zsh
+_download
+_copy_prep
+/opt/tmp/init_images
 
 exit 0
