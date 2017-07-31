@@ -21,8 +21,8 @@ _mk_networks() {
 
 _download() {
     logger -t user_rc.local -s DOWNLOAD IMAGES
-    docker run --rm -ti -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper wget http://demo.njk.li:8081/imgs.7z
-    docker run --rm -ti -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper 7z x imgs.7z
+    docker run --rm -t -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper wget http://demo.njk.li:8081/imgs.7z
+    docker run --rm -t -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper 7z x imgs.7z
     # eval "$DKR wget http://demo.njk.li:8081/imgs.7z"
     # eval "$DKR 7z x imgs.7z"
     rm -rf /opt/tmp/imgs.7z
@@ -33,7 +33,7 @@ _copy_prep() {
     logger -t user_rc.local -s COPY IMAGES PREP
     # local cmd="ruby -ropen-uri -e"
     # eval "$DKR $cmd \"eval(open('https://raw.githubusercontent.com/sdwandemo/topology2/master/scripts/copy_prep.rb').read)\""
-    docker run --rm -ti -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper ruby -ropen-uri -e "eval(open('https://raw.githubusercontent.com/sdwandemo/topology2/master/scripts/copy_prep.rb').read)"
+    docker run --rm -t -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper ruby -ropen-uri -e "eval(open('https://raw.githubusercontent.com/sdwandemo/topology2/master/scripts/copy_prep.rb').read)"
     logger -t user_rc.local -s COPY IMAGES PREP FINISHED
 }
 
