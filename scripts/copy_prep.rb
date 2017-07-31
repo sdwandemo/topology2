@@ -1,4 +1,4 @@
-require 'yaml'
+%w(yaml pathname fileutils).each(&method(:require))
 
 cmd = "docker run -dti -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper"
 uri = "https://raw.githubusercontent.com/sdwandemo/topology2/master/docker-compose.yml"
