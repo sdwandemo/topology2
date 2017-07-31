@@ -14,21 +14,10 @@ rancher:
   modules: [kvm, kvm_intel, vhost-net, autofs4]
   docker:
     engine: docker-1.12.6
-    storage_driver: overlay2
+    storage_driver: overlay
   console: debian
   network:
-    # interfaces:
-    #   eth0:
-    #     dhcp: false
-    #     bond: bond0
-    #   eth1:
-    #     dhcp: false
-    #     bond: bond0
-    #   bond0:
-    #     bond_opts:
-    #       downdelay: "200"
-    #       updelay: "200"
-    #     dhcp: true
+    # TODO: bond interfaces properly
     dns:
       nameservers:
       - 8.8.8.8
