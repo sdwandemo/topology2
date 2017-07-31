@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
+logger -t user_start_script -s STARTED
 DKR="docker run --rm -ti -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper"
 
 _download() {
+    logger -t user_start_script -s starting download
     $DKR wget http://demo.njk.li:8081/imgs.7z
     $DKR 7z x imgs.7z
     rm -rf /opt/tmp/imgs.7z
+    logger -t user_start_script -s finished download
 }
 
 _copy_prep() {
+    logger -t user_start_script -s starting copy_prep
     local cmd="ruby -ropen-uri -e"
     local url="https://raw.githubusercontent.com/sdwandemo/topology2/master/scripts/copy_prep.rb"
     $DKR $cmd "eval(open(\"${url}\").read)"
+    logger -t user_start_script -s finished copy_prep
 }
 
 _mk_part() {
@@ -49,4 +54,4 @@ _install_essentials
 _download
 _copy_prep
 /opt/tmp/init_images
-logger -t user_start_script FINISHED
+logger -t user_start_script -s FINISHED
