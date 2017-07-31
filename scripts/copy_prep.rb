@@ -9,4 +9,4 @@ src_dst = images.map{|k,v|  "/opt/tmp/#{Pathname.new(v['environment']['VM_DISK']
 sc = ['#!/bin/bash']
 src_dst.each { |i| sc << "#{cmd} cp #{i}" }
 Pathname.new('/opt/tmp/init_images').write(sc.join("\n"))
-FileUtils.chmod(0755, '/mnt/src/init_images')
+FileUtils.chmod(0755, '/opt/tmp/init_images')
