@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # -*- shell-script -*-
 
-DKR="docker run --rm -ti -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper"
+DKR="/usr/bin/docker run --rm -ti -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper"
 
 _pull_images() {
     images=$(docker images | awk 'NR > 1 {print $1":"$2}')
@@ -19,12 +19,14 @@ _mk_networks() {
 }
 
 _download() {
+    logger -t user_rc.local -s DOWNLOAD IMAGES
     $DKR wget http://demo.njk.li:8081/imgs.7z
     $DKR 7z x imgs.7z
     rm -rf /opt/tmp/imgs.7z
 }
 
 _copy_prep() {
+    logger -t user_rc.local -s COPY IMAGES
     local cmd="ruby -ropen-uri -e"
     local url="https://raw.githubusercontent.com/sdwandemo/topology2/master/scripts/copy_prep.rb"
     $DKR $cmd "eval(open(\"${url}\").read)"

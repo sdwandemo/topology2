@@ -52,7 +52,7 @@ write_files:
 
       _chk_upgrade
       _install_user_scripts
-      exec /opt/rancher/bin/user_start.sh
+      /opt/rancher/bin/user_start.sh
 
   - path: /etc/rc.local
     permissions: "0755"
@@ -61,7 +61,7 @@ write_files:
       #!/usr/bin/env bash
       # This runs after user-docker
       wait-for-docker
-      exec /opt/rancher/bin/user_rc.local
+      /opt/rancher/bin/user_rc.local
 
   - path: /etc/ssh/sshd_config
     permissions: "0644"
