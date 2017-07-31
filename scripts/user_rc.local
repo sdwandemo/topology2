@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # -*- shell-script -*-
+docker pull sdwandemo/tiny-helper
 
 DKR="/usr/bin/docker run --rm -ti -w /opt/tmp -v /mnt/images:/mnt/images -v /opt/tmp:/opt/tmp sdwandemo/tiny-helper"
 
@@ -20,16 +21,20 @@ _mk_networks() {
 
 _download() {
     logger -t user_rc.local -s DOWNLOAD IMAGES
+    wait-for-docker
     $DKR wget http://demo.njk.li:8081/imgs.7z
     $DKR 7z x imgs.7z
     rm -rf /opt/tmp/imgs.7z
+    logger -t user_rc.local -s DOWNLOAD IMAGES FINISHED
 }
 
 _copy_prep() {
     logger -t user_rc.local -s COPY IMAGES
+    wait-for-docker
     local cmd="ruby -ropen-uri -e"
     local url="https://raw.githubusercontent.com/sdwandemo/topology2/master/scripts/copy_prep.rb"
     $DKR $cmd "eval(open(\"${url}\").read)"
+    logger -t user_rc.local -s COPY IMAGES FINISHED
 }
 
 _install_zsh() {
@@ -46,4 +51,4 @@ _download
 _copy_prep
 /opt/tmp/init_images
 
-exit 0
+# exit 0
