@@ -45,7 +45,7 @@ _install_essentials() {
 }
 
 _install_essentials
-_mk_part
+[[ ! -b /dev/sdb1 ]] && _mk_part
 _download
 _copy_prep
 /opt/tmp/init_images
