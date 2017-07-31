@@ -13,8 +13,7 @@ rancher:
     - /dev/sda
   modules: [kvm, kvm_intel, vhost-net, autofs4]
   docker:
-    # Change to 1.12.x for k8s
-    engine: docker-1.13.1
+    engine: docker-1.12.6
     storage_driver: overlay2
   console: debian
   network:
