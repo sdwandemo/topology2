@@ -67,6 +67,7 @@ write_files:
     permissions: "0644"
     owner: root:root
     content: |
+      Port 16777
       UsePrivilegeSeparation yes
       ClientAliveInterval 180
       TCPKeepAlive yes
@@ -85,7 +86,8 @@ write_files:
       ChallengeResponseAuthentication no
       RSAAuthentication yes
       PubkeyAuthentication yes
-      AcceptEnv LANG LC_*
+      PrintLastLog yes
+      AcceptEnv *
       UseDNS no
       UsePAM yes
 
