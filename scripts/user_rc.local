@@ -16,7 +16,7 @@ _mk_networks() {
 }
 
 _enable_kernel_headers
-_pull_images
+# _pull_images
 # _mk_networks
 
 exit 0
