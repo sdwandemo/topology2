@@ -62,7 +62,7 @@ services:
 # <END> poor mans Ingress, until replaced with k8
 
   teleport:
-    image: voobscout/viptela:teleport
+    image: sdwandemo/teleport
     command: 'teleport start --roles=proxy,auth --config /etc/teleport.yml'
     hostname: teleport
     domainname: sdwan-demo.com
@@ -363,7 +363,7 @@ services:
       - n_192_168_6_128__25
 
   ux-srv-coreswitch:
-    image: voobscout/viptela:teleport
+    image: sdwandemo/teleport
     command: 'teleport start --roles=node --token=internalxyz --auth-server=teleport:3025'
     hostname: ux-srv-coreswitch
     domainname: sdwan-demo.com
@@ -555,7 +555,7 @@ services:
       - n_192_168_1_0__24
 
   ux-srv-site1:
-    image: voobscout/viptela:teleport
+    image: sdwandemo/teleport
     command: 'teleport start --roles=node --token=internalxyz --auth-server=teleport:3025'
     hostname: ux-srv-site1
     domainname: sdwan-demo.com
@@ -867,7 +867,7 @@ services:
       - n_192_168_4_128__25
 
   ux-srv-b2b:
-    image: voobscout/viptela:teleport
+    image: sdwandemo/teleport
     command: 'teleport start --roles=node --token=internalxyz --auth-server=teleport:3025'
     hostname: ux-srv-b2b
     domainname: sdwan-demo.com
@@ -904,7 +904,7 @@ services:
       - n_192_168_3_0__24
 
   ux-srv-site3:
-    image: voobscout/viptela:teleport
+    image: sdwandemo/teleport
     command: 'teleport start --roles=node --token=internalxyz --auth-server=teleport:3025'
     hostname: ux-srv-site3
     domainname: sdwan-demo.com
