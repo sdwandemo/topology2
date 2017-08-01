@@ -270,7 +270,7 @@ services:
 
   # Alternative definition with ENV
   e-reg-dc:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-reg-dc
       VM_TITLE: 'E - Regional DataCenter'
@@ -303,7 +303,7 @@ services:
 # TODO: sdwan-demo.com/firewall
 # WAN interface to EGRESS
   firewall:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: pfsense
       VM_TITLE: 'pfSense 2.3.4 embedded kernel'
@@ -332,7 +332,7 @@ services:
 
 # TODO: connect NIC to EGRESS
   core-switch:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: core-switch
       VM_TITLE: 'E - DataCenter Core Switch'
@@ -373,7 +373,7 @@ services:
       - n_192_168_5_0__24
 
   dc-left:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: dc-left
       VM_TITLE: 'E - Regional DataCenter - Left'
@@ -402,7 +402,7 @@ services:
       - n_172_16_5_0__24
 
   dc-right:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: dc-right
       VM_TITLE: 'E - Regional DataCenter - Right'
@@ -432,7 +432,7 @@ services:
 
 # TODO: Connect one nic to EGRESS
   e-inet:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-inet
       VM_TITLE: 'E - Internet router'
@@ -465,7 +465,7 @@ services:
       - n_10_0_4_0__24
 
   e-mpls:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-mpls
       VM_TITLE: 'E - MPLS'
@@ -499,7 +499,7 @@ services:
 ##################################################
 # TODO: URI: sdwan-demo.com/wanem
   wanem:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: wanem
       VM_TITLE: 'WanEm - http://wanem.sourceforge.net/'
@@ -527,7 +527,7 @@ services:
       - n_10_0_1_0__25
 
   e-site1:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-site1
       VM_TITLE: 'E - Site 1'
@@ -565,7 +565,7 @@ services:
       - n_192_168_1_0__24
 
   e-left-site2:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-left-site2
       VM_TITLE: 'E - Left Site 2'
@@ -594,7 +594,7 @@ services:
       - n_192_168_2_0__24
 
   e-right-site2:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-right-site2
       VM_TITLE: 'E - Right Site 2'
@@ -654,7 +654,7 @@ services:
       - "2222:22"
 
   e-bond1-demo:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-bond1-demo
       VM_TITLE: 'E - vBond1 Upper right (demonstrator)'
@@ -680,7 +680,7 @@ services:
       - n_192_168_100_0__24
 
   e-bond2-demo:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-bond2-demo
       VM_TITLE: 'E - vBond2 Upper right (demonstrator)'
@@ -706,7 +706,7 @@ services:
       - n_192_168_100_0__24
 
   s-smart1-demo:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: s-smart1-demo
       VM_TITLE: 'S - vSmart1 Upper right (demonstrator)'
@@ -732,7 +732,7 @@ services:
       - n_192_168_100_0__24
 
   s-smart2-demo:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: s-smart2-demo
       VM_TITLE: 'S - vSmart2 Upper right (demonstrator)'
@@ -759,7 +759,7 @@ services:
 
 # TODO: separate URI - sdwan-demo.com/vmanage
   vmanage:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: vmanage
       VM_TITLE: 'M - vManage Upper right (demonstrator)'
@@ -785,7 +785,7 @@ services:
       - n_192_168_100_0__24
 
   e-cloud:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-cloud
       VM_TITLE: 'E - Cloud Upper right (demonstrator)'
@@ -813,7 +813,7 @@ services:
       - n_10_0_8_0__24
 
   e-b2b:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: e-b2b
       VM_TITLE: 'E - B2B East-Side'
@@ -840,7 +840,7 @@ services:
       - n_192_168_4_0__25
 
   csr1k-b2b:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: csr1k-b2b
       VM_TITLE: 'B2B - Cisco CSR 1k'
@@ -877,7 +877,7 @@ services:
       - n_192_168_4_128__25
 
   csr1k-site3:
-    image: voobscout/viptela
+    image: sdwandemo/libvirt
     environment:
       VM_NAME: csr1k-site3
       VM_TITLE: 'Site3 - Cisco CSR 1k'
