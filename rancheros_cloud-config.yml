@@ -13,8 +13,8 @@ rancher:
     - /dev/sda
   modules: [kvm, kvm_intel, vhost-net, autofs4]
   docker:
-    engine: docker-1.12.6
-    storage_driver: overlay
+    # engine: docker-1.12.6
+    storage_driver: overlay2
   console: debian
   network:
     # TODO: bond interfaces properly
