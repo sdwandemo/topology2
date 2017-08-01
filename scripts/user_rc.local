@@ -53,5 +53,6 @@ _enable_kernel_headers
 _download
 _copy_prep
 /opt/tmp/init_images
+_docker_compose
 
 exit 0
