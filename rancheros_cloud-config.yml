@@ -13,7 +13,8 @@ rancher:
     - /dev/sda
   modules: [kvm, kvm_intel, vhost-net, autofs4]
   docker:
-    # engine: docker-1.12.6
+    # https://github.com/rancher/os-services/tree/master/d
+    engine: docker-1.13.1
     storage_driver: overlay2
   console: debian
   network:

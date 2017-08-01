@@ -161,7 +161,7 @@ services:
 # Debugging networks
 ##################################################
   net-debug:
-    image: voobscout/viptela:net-debug
+    image: sdwandemo/net-debug
     hostname: net-debug
     domainname: sdwan-demo.com
     privileged: true
@@ -637,7 +637,7 @@ services:
 # DONE: For onetime setup effort - direct access via ssh from outside (using teleport)
 
   desktop:
-    image: voobscout/viptela:net-debug
+    image: sdwandemo/net-debug
     hostname: desktop
     domainname: sdwan-demo.com
     privileged: true
