@@ -271,6 +271,13 @@ services:
   # Alternative definition with ENV
   e-reg-dc:
     image: sdwandemo/libvirt
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost"]
+    #   test: ["CMD-SHELL", "curl -f http://localhost && echo 'cool, it works'"]
+    #   start_period: 1m
+    #   interval: 1m30s
+    #   timeout: 10s
+    #   retries: 3
     environment:
       VM_NAME: e-reg-dc
       VM_TITLE: 'E - Regional DataCenter'

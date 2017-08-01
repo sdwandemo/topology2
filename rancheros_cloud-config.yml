@@ -23,14 +23,6 @@ rancher:
       - 8.8.8.8
       - 8.8.4.4
 
-  # services:
-  #   copy_files:
-  #     image: sdwandemo/tiny-helper
-  #     command: '/usr/local/bin/init_imgs'
-  #     restart: on-failure
-  #     volumes:
-  #       - /opt/config/teleport.yml:/usr/local/bin/init_imgs
-
 write_files:
   - path: /opt/rancher/bin/start.sh
     permissions: "0755"
